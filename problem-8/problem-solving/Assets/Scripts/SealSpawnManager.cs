@@ -52,7 +52,7 @@ public class SealSpawnManager : MonoBehaviour
         Vector3 spawnPost = GetRandomPosition();
         canSpawnHere = PreventSpawnOverlap(spawnPost);
 
-        while (!canSpawnHere || attempt < 100)
+        while (!canSpawnHere && attempt < 100)
         {
             spawnPost = GetRandomPosition();
             canSpawnHere = PreventSpawnOverlap(spawnPost);
