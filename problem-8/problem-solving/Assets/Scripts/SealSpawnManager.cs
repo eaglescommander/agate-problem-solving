@@ -16,8 +16,6 @@ public class SealSpawnManager : MonoBehaviour
             return _instance; 
         } 
     }
-    private Dictionary<string, List<GameObject>> pool;
-
     [SerializeField] GameObject sealPrefab;
     [SerializeField] BoxCollider2D spawnArea;
  
@@ -40,7 +38,19 @@ public class SealSpawnManager : MonoBehaviour
     {
         for (int i=0; i<5; i++)
         {
-            Instantiate(sealPrefab, GetRandomPosition(), Quaternion.identity, gameObject.GetComponent<Transform>());
+            bool canSpawnHere;
+            int attempt = 0;
+            Vector3 spawnPost = GetRandomPosition();
+            canSpawnHere = PreventSpawnOverlap(spawnPost);
+
+            while (!canSpawnHere || attempt < 100)
+            {
+                spawnPost = GetRandomPosition();
+                canSpawnHere = PreventSpawnOverlap(spawnPost);
+                attempt++;
+            }
+
+            Instantiate(sealPrefab, spawnPost, Quaternion.identity, gameObject.GetComponent<Transform>());
         }
     }
 
@@ -52,7 +62,7 @@ public class SealSpawnManager : MonoBehaviour
         Vector3 spawnPost = GetRandomPosition();
         canSpawnHere = PreventSpawnOverlap(spawnPost);
 
-        while (!canSpawnHere && attempt < 100)
+        while (!canSpawnHere || attempt < 100)
         {
             spawnPost = GetRandomPosition();
             canSpawnHere = PreventSpawnOverlap(spawnPost);
